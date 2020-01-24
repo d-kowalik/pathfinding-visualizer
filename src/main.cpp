@@ -1,17 +1,10 @@
 #include <cstdio>
 
-#include <glm/gtc/matrix_transform.hpp>
+#include <Application.hpp>
+#include <Graphics/Window.hpp>
+#include <Input/Input.hpp>
 
-#include "Graphics/Font.hpp"
-#include "Graphics/Window.hpp"
-#include "Graphics/Shader.hpp"
-#include "Graphics/ShaderProgram.hpp"
-#include "Input/Input.hpp"
-#include "Camera.hpp"
-#include "Graphics/FontRenderer.hpp"
-#include "Graphics/RectangleRenderer.hpp"
-
-#include "Application.hpp"
+#include "Point.hpp"
 
 #include <set>
 #include <stack>
@@ -22,19 +15,7 @@ using namespace sge;
 int size_x, size_y;
 using std::set, std::pair, std::make_pair, std::stack;
 
-struct Point {
-  Point() = default;
 
-  Point(int x, int y) : x(x), y(y) {}
-
-  Point(int x, int y, int dist) : x(x), y(y), distance(dist) {}
-
-  int x, y, distance = 0;
-
-  friend bool operator<(const Point &l, const Point &r) {
-    return l.distance <= r.distance;
-  }
-};
 
 bool is_in_bounds(int x, int y) {
   return x >= 0 && y >= 0 && x < size_x && y < size_y;
