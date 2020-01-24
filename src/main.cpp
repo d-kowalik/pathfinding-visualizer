@@ -146,10 +146,6 @@ class Program : public sge::Application {
 
   bool OnUpdate(float delta) override {
     if (Input::IsKeyPressed(Key::ESCAPE)) Window::Instance()->Close();
-    if (Input::IsKeyPressed(Key::A)) _camera->Move(Camera::Direction::LEFT, delta);
-    if (Input::IsKeyPressed(Key::D)) _camera->Move(Camera::Direction::RIGHT, delta);
-    if (Input::IsKeyPressed(Key::W)) _camera->Move(Camera::Direction::UP, delta);
-    if (Input::IsKeyPressed(Key::S)) _camera->Move(Camera::Direction::DOWN, delta);
     if (Input::IsKeyPressed(Key::SPACE)) _started = true;
 
 
