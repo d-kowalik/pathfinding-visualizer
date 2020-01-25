@@ -44,8 +44,8 @@ class Program : public sge::Application {
     if (Input::IsKeyPressed(Key::ESCAPE)) Window::Instance()->Close();
     if (Input::IsKeyPressed(Key::SPACE)) _started = true;
 
-    DrawButton("Dijkstra", {0, 720-TOP_BOUND}, {150, TOP_BOUND});
-    DrawButton("A*", {150+10, 720-TOP_BOUND}, {150, TOP_BOUND});
+    DrawButton("Dijkstra", {0, 720-TOP_BOUND}, {150, TOP_BOUND}, {.5f, .8f, .5f});
+    DrawButton("A*", {150+10, 720-TOP_BOUND}, {150, TOP_BOUND}, {.3f, .7f, .3f});
 
     auto src = _dijkstra->GetSrc();
     auto dest = _dijkstra->GetDest();
