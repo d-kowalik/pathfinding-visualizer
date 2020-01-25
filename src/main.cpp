@@ -14,6 +14,8 @@ using namespace sge;
 class Program : public sge::Application {
   using sge::Application::Application;
 
+  static constexpr float TOP_BOUND = 66.f;
+
   int field_size = 32.0f;
   int margin = 6.0f;
   int fields_w = 0, fields_h = 0;
@@ -25,7 +27,7 @@ class Program : public sge::Application {
 
   bool OnCreate() override {
     int w = Window::Instance()->GetWidth();
-    int h = Window::Instance()->GetHeight();
+    int h = Window::Instance()->GetHeight() - TOP_BOUND;
     fields_w = w / (field_size + margin);
     fields_h = h / (field_size + margin);
 
@@ -41,6 +43,9 @@ class Program : public sge::Application {
   bool OnUpdate(float delta) override {
     if (Input::IsKeyPressed(Key::ESCAPE)) Window::Instance()->Close();
     if (Input::IsKeyPressed(Key::SPACE)) _started = true;
+
+    DrawButton("Dijkstra", {0, 720-TOP_BOUND}, {150, TOP_BOUND});
+    DrawButton("A*", {150+10, 720-TOP_BOUND}, {150, TOP_BOUND});
 
     auto src = _dijkstra->GetSrc();
     auto dest = _dijkstra->GetDest();
@@ -75,7 +80,8 @@ class Program : public sge::Application {
       }
     }
 
-    timer += delta*100;
+    if (timer < 1.0f)
+      timer += delta*100;
     while (_started && timer > 1.0f)
     {
       timer -= 1.f;
