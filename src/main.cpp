@@ -26,6 +26,7 @@ class Program : public sge::Application {
   Board *_board;
   Dijkstra *_dijkstra;
   Point _src, _dest;
+  float _keypress_timeout = 1.0f;
 
   bool OnCreate() override {
     int w = Window::Instance()->GetWidth();
@@ -45,13 +46,18 @@ class Program : public sge::Application {
   bool OnUpdate(float delta) override {
     if (Input::IsKeyPressed(Key::ESCAPE)) Window::Instance()->Close();
     if (Input::IsKeyPressed(Key::SPACE)) {
-      if (_started) {
-        _dijkstra->Reset();
-        _started = false;
-      } else {
-        _started = true;
+      if (_keypress_timeout >= 1.0f) {
+        _keypress_timeout -= 1.0f;
+        if (_started) {
+          _dijkstra->Reset();
+          _started = false;
+        } else {
+          _started = true;
+        }
       }
     }
+
+    _keypress_timeout += delta * 10;
 
     auto src = _dijkstra->GetSrc();
     auto dest = _dijkstra->GetDest();
