@@ -57,7 +57,8 @@ class Program : public sge::Application {
       }
     }
 
-    _keypress_timeout += delta * 10;
+    if (_keypress_timeout < 1.0f)
+      _keypress_timeout += delta * 10;
 
     auto src = _dijkstra->GetSrc();
     auto dest = _dijkstra->GetDest();
