@@ -17,9 +17,9 @@ class Program : public sge::Application {
 
   static constexpr float TOP_BOUND = 66.f;
 
-  int field_size = 32.0f;
+  float field_size = 32.0f;
+  int cells_horizontally = 50, cells_vertically;
   int margin = 6.0f;
-  int fields_w = 0, fields_h = 0;
   float timer = 0.f;
   bool found = false;
   bool _started = false;
@@ -31,13 +31,13 @@ class Program : public sge::Application {
   bool OnCreate() override {
     int w = Window::Instance()->GetWidth();
     int h = Window::Instance()->GetHeight() - TOP_BOUND;
-    fields_w = w / (field_size + margin);
-    fields_h = h / (field_size + margin);
+    field_size = w / (cells_horizontally + 2*margin);
+    cells_vertically = h / (field_size + margin);
 
     _src = {3, 3};
     _dest = {30, 16};
 
-    _board = new Board{fields_w, fields_h};
+    _board = new Board{cells_horizontally, cells_vertically};
     _dijkstra = new Dijkstra(_board, _src, _dest);
 
     return true;
@@ -74,8 +74,8 @@ class Program : public sge::Application {
       _dijkstra = new AStar(_board,  src, dest);
     });
 
-    for (int y = 0; y < fields_h; y++) {
-      for (int x = 0; x < fields_w; x++) {
+    for (int y = 0; y < cells_vertically; y++) {
+      for (int x = 0; x < cells_horizontally; x++) {
         if (x == src.x && y == src.y) {
           DrawRectangle({field_size, field_size}, {(margin * (x + 1) + field_size * x),
                                                    (margin * (y + 1) + field_size * y)}, {.9f, .0f, .6f});
