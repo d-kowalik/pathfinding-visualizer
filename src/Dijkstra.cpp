@@ -9,6 +9,8 @@ void Dijkstra::Reset(Board* board, Point src, Point dest) {
   _src = src;
   _dest = dest;
   _final_path.clear();
+  _next_points.clear();
+  _found = false;
   _visited = std::vector<std::vector<bool>>(board->GetWidth(), std::vector<bool>(board->GetHeight(), false));
   _previous_points = std::vector<std::vector<std::pair<int, int>>>(board->GetWidth(),
                                                                    std::vector<std::pair<int, int>>(board->GetHeight()));
@@ -17,7 +19,7 @@ void Dijkstra::Reset(Board* board, Point src, Point dest) {
 
 void Dijkstra::Reset(Point src, Point dest) {
   _board->Reset();
-  Reset(_board, _src, _dest);
+  Reset(_board, src, dest);
 }
 
 void Dijkstra::Reset() {
