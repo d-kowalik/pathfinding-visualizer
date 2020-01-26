@@ -7,6 +7,7 @@
 #include "Point.hpp"
 #include "Board.hpp"
 #include "Dijkstra.hpp"
+#include "AStar.hpp"
 
 using namespace sge;
 
@@ -22,8 +23,9 @@ class Program : public sge::Application {
   float timer = 0.f;
   bool found = false;
   bool _started = false;
-  Board* _board;
-  Dijkstra* _dijkstra;
+  Board *_board;
+  Dijkstra *_dijkstra;
+  Point _src, _dest;
 
   bool OnCreate() override {
     int w = Window::Instance()->GetWidth();
@@ -31,11 +33,11 @@ class Program : public sge::Application {
     fields_w = w / (field_size + margin);
     fields_h = h / (field_size + margin);
 
-    Point src = {3, 3};
-    Point dest = {30, 16};
+    _src = {3, 3};
+    _dest = {30, 16};
 
     _board = new Board{fields_w, fields_h};
-    _dijkstra = new Dijkstra(_board, src, dest);
+    _dijkstra = new Dijkstra(_board, _src, _dest);
 
     return true;
   }
@@ -44,8 +46,14 @@ class Program : public sge::Application {
     if (Input::IsKeyPressed(Key::ESCAPE)) Window::Instance()->Close();
     if (Input::IsKeyPressed(Key::SPACE)) _started = true;
 
-    DrawButton("Dijkstra", {0, 720-TOP_BOUND}, {150, TOP_BOUND}, {.5f, .8f, .5f});
-    DrawButton("A*", {150+10, 720-TOP_BOUND}, {150, TOP_BOUND}, {.3f, .7f, .3f});
+    DrawButton("Dijkstra", {0, 720 - TOP_BOUND}, {150, TOP_BOUND}, {.5f, .8f, .5f}, {.0f, .0f, .0f},
+        [&](float, float) {
+      _dijkstra = new Dijkstra(_board, _src, _dest);
+    });
+    DrawButton("A*", {150 + 10, 720 - TOP_BOUND}, {150, TOP_BOUND}, {.3f, .7f, .3f}, {.0f, .0f, .0f},
+        [&](float, float) {
+        _dijkstra = new AStar(_board, _src, _dest);
+    });
 
     auto src = _dijkstra->GetSrc();
     auto dest = _dijkstra->GetDest();
@@ -81,9 +89,8 @@ class Program : public sge::Application {
     }
 
     if (timer < 1.0f)
-      timer += delta*100;
-    while (_started && timer > 1.0f)
-    {
+      timer += delta * 100;
+    while (_started && timer > 1.0f) {
       timer -= 1.f;
       _dijkstra->Tick();
     }
