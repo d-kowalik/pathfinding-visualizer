@@ -15,6 +15,9 @@ public:
   bool InBounds(int x, int y) const;
   bool Free(int x, int y) const;
 
+  void Reset(float w, float h);
+  void Reset();
+
   void SetWall(int x, int y) {
     _graph[x][y] = 0;
   }

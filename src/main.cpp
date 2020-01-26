@@ -44,15 +44,24 @@ class Program : public sge::Application {
 
   bool OnUpdate(float delta) override {
     if (Input::IsKeyPressed(Key::ESCAPE)) Window::Instance()->Close();
-    if (Input::IsKeyPressed(Key::SPACE)) _started = true;
+    if (Input::IsKeyPressed(Key::SPACE)) {
+      if (_started) {
+        _dijkstra->Reset();
+        _started = false;
+      } else {
+        _started = true;
+      }
+    }
 
     DrawButton("Dijkstra", {0, 720 - TOP_BOUND}, {150, TOP_BOUND}, {.5f, .8f, .5f}, {.0f, .0f, .0f},
         [&](float, float) {
+      delete _dijkstra;
       _dijkstra = new Dijkstra(_board, _src, _dest);
     });
     DrawButton("A*", {150 + 10, 720 - TOP_BOUND}, {150, TOP_BOUND}, {.3f, .7f, .3f}, {.0f, .0f, .0f},
         [&](float, float) {
-        _dijkstra = new AStar(_board, _src, _dest);
+      delete _dijkstra;
+      _dijkstra = new AStar(_board, _src, _dest);
     });
 
     auto src = _dijkstra->GetSrc();

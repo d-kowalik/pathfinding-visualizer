@@ -5,7 +5,7 @@
 #include "Board.hpp"
 
 Board::Board(int w, int h) : _w{w}, _h{h} {
-  _graph = std::vector<std::vector<int>>(w, std::vector<int>(h, 1));
+  Reset(w, h);
 }
 
 bool Board::InBounds(int x, int y) const {
@@ -14,4 +14,14 @@ bool Board::InBounds(int x, int y) const {
 
 bool Board::Free(int x, int y) const {
   return _graph[x][y];
+}
+
+void Board::Reset(float w, float h) {
+  _w = w;
+  _h = h;
+  _graph = std::vector<std::vector<int>>(w, std::vector<int>(h, 1));
+}
+
+void Board::Reset() {
+  Reset(_w, _h);
 }

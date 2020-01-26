@@ -34,6 +34,10 @@ public:
     return _visited[x][y];
   }
 
+  void Reset(Board* board, Point src, Point dest);
+  void Reset(Point src, Point dest);
+  void Reset();
+
   virtual bool Check(int x, int y, Point current_point, bool diag = false) {
     if (_board->InBounds(x, y) && !_visited[x][y]) {
       _visited[x][y] = true;
