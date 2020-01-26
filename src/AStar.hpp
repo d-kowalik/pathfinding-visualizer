@@ -15,7 +15,7 @@ class AStar : public Dijkstra {
         return true;
       }
       if (_board->Free(x, y)) {
-        _next_points.emplace(x, y, current_point.g+(diag ? 1.4f : 1.0f), CalculateHValue(x, y));
+        _next_points.emplace(x, y, current_point.g+(diag ? std::sqrt(1.4f) : 1.0f), CalculateHValue(x, y));
         _previous_points[x][y] = std::make_pair(current_point.x, current_point.y);
       }
     }
