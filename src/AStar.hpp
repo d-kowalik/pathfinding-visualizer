@@ -11,7 +11,7 @@ class AStar : public Dijkstra {
       if (x == _dest.x && y == _dest.y) {
         printf("Found! Distance: %f\n", current_point.distance + 1);
         _previous_points[x][y] = std::make_pair(current_point.x, current_point.y);
-        CalculatePath(current_point.distance + 1);
+        CalculatePath();
         return true;
       }
       if (_board->Free(x, y)) {

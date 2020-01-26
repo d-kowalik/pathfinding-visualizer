@@ -47,7 +47,7 @@ public:
       if (x == _dest.x && y == _dest.y) {
         printf("Found! Distance: %f\n", current_point.distance + 1);
         _previous_points[x][y] = std::make_pair(current_point.x, current_point.y);
-        CalculatePath(current_point.distance + (diag ? 2 : 1));
+        CalculatePath();
         return true;
       }
       if (_board->Free(x, y)) {
@@ -58,12 +58,11 @@ public:
     return false;
   }
 
-  void CalculatePath(int dist) {
-    dist += 1;
+  void CalculatePath() {
     std::stack<std::pair<int, int>> path{};
     int x = _dest.x;
     int y = _dest.y;
-    while (dist--) {
+    while (x != _src.x || y != _src.y) {
       path.emplace(x, y);
       _final_path.emplace_back(x, y);
       auto next_pair = _previous_points[x][y];
