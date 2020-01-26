@@ -91,6 +91,16 @@ class Program : public sge::Application {
           DrawRectangle({field_size, field_size}, {(margin * (x + 1) + field_size * x),
                                                    (margin * (y + 1) + field_size * y)}, {.0f, .8f, .3f},
                         [=](float _1, float _2) {
+                          if (!_started) {
+                            if (Input::IsKeyPressed(Key::LEFT_CONTROL)) {
+                              _dijkstra->SetSource({x, y});
+                              this->_src = {x, y};
+                            }
+                            else if (Input::IsKeyPressed(Key::LEFT_SHIFT)) {
+                              _dijkstra->SetDestination({x, y});
+                              this->_dest = {x, y};
+                            }
+                          }
                           _board->SetWall(x, y);
                         });
         }

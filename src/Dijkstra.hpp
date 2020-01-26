@@ -38,6 +38,9 @@ public:
   void Reset(Point src, Point dest);
   void Reset();
 
+  inline void SetSource(Point src) { _src = src; }
+  inline void SetDestination(Point dest) { _dest = dest; }
+
   virtual bool Check(int x, int y, Point current_point, bool diag = false) {
     if (_board->InBounds(x, y) && !_visited[x][y]) {
       _visited[x][y] = true;
