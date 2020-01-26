@@ -47,11 +47,11 @@ public:
       if (x == _dest.x && y == _dest.y) {
         printf("Found! Distance: %f\n", current_point.distance + 1);
         _previous_points[x][y] = std::make_pair(current_point.x, current_point.y);
-        CalculatePath(current_point.distance + 1);
+        CalculatePath(current_point.distance + (diag ? 2 : 1));
         return true;
       }
       if (_board->Free(x, y)) {
-        _next_points.emplace(x, y, current_point.distance + 1);
+        _next_points.emplace(x, y, current_point.distance + (diag ? 2 : 1));
         _previous_points[x][y] = std::make_pair(current_point.x, current_point.y);
       }
     }
@@ -104,14 +104,14 @@ public:
       // Search up
       if (!_found && Check(x, y - 1, current_point))
         _found = true;
-//      if (!_found && Check(x+1, y + 1, current_point, true))
-//        _found = true;
-//      if (!_found && Check(x + 1, y - 1, current_point, true))
-//        _found = true;
-//      if (!_found && Check(x - 1, y + 1, current_point, true))
-//        _found = true;
-//      if (!_found && Check(x - 1, y - 1, current_point, true))
-//        _found = true;
+      if (!_found && Check(x+1, y + 1, current_point, true))
+        _found = true;
+      if (!_found && Check(x + 1, y - 1, current_point, true))
+        _found = true;
+      if (!_found && Check(x - 1, y + 1, current_point, true))
+        _found = true;
+      if (!_found && Check(x - 1, y - 1, current_point, true))
+        _found = true;
     }
   }
 };
