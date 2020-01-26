@@ -53,19 +53,19 @@ class Program : public sge::Application {
       }
     }
 
-    DrawButton("Dijkstra", {0, 720 - TOP_BOUND}, {150, TOP_BOUND}, {.5f, .8f, .5f}, {.0f, .0f, .0f},
-        [&](float, float) {
-      delete _dijkstra;
-      _dijkstra = new Dijkstra(_board, _src, _dest);
-    });
-    DrawButton("A*", {150 + 10, 720 - TOP_BOUND}, {150, TOP_BOUND}, {.3f, .7f, .3f}, {.0f, .0f, .0f},
-        [&](float, float) {
-      delete _dijkstra;
-      _dijkstra = new AStar(_board, _src, _dest);
-    });
-
     auto src = _dijkstra->GetSrc();
     auto dest = _dijkstra->GetDest();
+
+    DrawButton("Dijkstra", {0, 720 - TOP_BOUND}, {150, TOP_BOUND}, {.5f, .8f, .5f}, {.0f, .0f, .0f},
+        [=](float, float) {
+      delete _dijkstra;
+      _dijkstra = new Dijkstra(_board, src, dest);
+    });
+    DrawButton("A*", {150 + 10, 720 - TOP_BOUND}, {150, TOP_BOUND}, {.3f, .7f, .3f}, {.0f, .0f, .0f},
+        [=](float, float) {
+      delete _dijkstra;
+      _dijkstra = new AStar(_board,  src, dest);
+    });
 
     for (int y = 0; y < fields_h; y++) {
       for (int x = 0; x < fields_w; x++) {
