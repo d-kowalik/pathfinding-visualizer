@@ -21,7 +21,7 @@ file(GLOB_RECURSE HEADER_FILES
 link_directories(${CMAKE_SOURCE_DIR}/lib)
 
 # Define the executable
-add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES} src/main.cpp src/Point.hpp src/Dijkstra.cpp src/Dijkstra.hpp src/Board.cpp src/Board.hpp)
+add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES} src/main.cpp src/Point.hpp src/Dijkstra.cpp src/Dijkstra.hpp src/Board.cpp src/Board.hpp src/AStar.cpp src/AStar.hpp)
 
 find_package(OpenGL REQUIRED)
 

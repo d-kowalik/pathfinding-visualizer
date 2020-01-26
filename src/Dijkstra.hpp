@@ -8,8 +8,10 @@
 #include <stack>
 #include <utility>
 #include <algorithm>
+#include <cmath>
 
 class Dijkstra {
+protected:
   Board* _board;
   std::vector<std::vector<bool>> _visited;
   std::set<Point> _next_points{};
@@ -32,18 +34,18 @@ public:
     return _visited[x][y];
   }
 
-  bool Check(int x, int y, int current_x, int current_y, int dist) {
+  virtual bool Check(int x, int y, Point current_point, bool diag = false) {
     if (_board->InBounds(x, y) && !_visited[x][y]) {
       _visited[x][y] = true;
       if (x == _dest.x && y == _dest.y) {
-        printf("Found! Distance: %d\n", dist + 1);
-        _previous_points[x][y] = std::make_pair(current_x, current_y);
-        CalculatePath(dist + 1);
+        printf("Found! Distance: %f\n", current_point.distance + 1);
+        _previous_points[x][y] = std::make_pair(current_point.x, current_point.y);
+        CalculatePath(current_point.distance + 1);
         return true;
       }
       if (_board->Free(x, y)) {
-        _next_points.emplace(x, y, dist + 1);
-        _previous_points[x][y] = std::make_pair(current_x, current_y);
+        _next_points.emplace(x, y, current_point.distance + 1);
+        _previous_points[x][y] = std::make_pair(current_point.x, current_point.y);
       }
     }
     return false;
@@ -84,17 +86,25 @@ public:
       _visited[x][y] = true;
 
       // Search right
-      if (!_found && Check(x + 1, y, x, y, dist))
+      if (!_found && Check(x + 1, y, current_point))
         _found = true;
       // Search left
-      if (!_found && Check(x - 1, y, x, y, dist))
+      if (!_found && Check(x - 1, y, current_point))
         _found = true;
       // Search down
-      if (!_found && Check(x, y + 1, x, y, dist))
+      if (!_found && Check(x, y + 1, current_point))
         _found = true;
       // Search up
-      if (!_found && Check(x, y - 1, x, y, dist))
+      if (!_found && Check(x, y - 1, current_point))
         _found = true;
+//      if (!_found && Check(x+1, y + 1, current_point, true))
+//        _found = true;
+//      if (!_found && Check(x + 1, y - 1, current_point, true))
+//        _found = true;
+//      if (!_found && Check(x - 1, y + 1, current_point, true))
+//        _found = true;
+//      if (!_found && Check(x - 1, y - 1, current_point, true))
+//        _found = true;
     }
   }
 };
