@@ -18,8 +18,8 @@ class Program : public sge::Application {
   static constexpr float TOP_BOUND = 66.f;
 
   float field_size = 32.0f;
-  int cells_horizontally = 50, cells_vertically;
-  int margin = 6.0f;
+  int cells_horizontally = 100, cells_vertically;
+  int margin = .0f;
   float timer = 0.f;
   bool found = false;
   bool _started = false;
@@ -27,11 +27,14 @@ class Program : public sge::Application {
   Dijkstra *_dijkstra;
   Point _src, _dest;
   float _keypress_timeout = 1.0f;
+  float click_cooldown = 1.0f;
+  bool** _already_clicked;
+  bool _mouse_button_released = false;
 
   bool OnCreate() override {
     int w = Window::Instance()->GetWidth();
     int h = Window::Instance()->GetHeight() - TOP_BOUND;
-    field_size = w / (cells_horizontally + 2*margin);
+    field_size = (float)w / (float)(cells_horizontally + 2*margin);
     cells_vertically = h / (field_size + margin);
 
     _src = {3, 3};
@@ -39,6 +42,8 @@ class Program : public sge::Application {
 
     _board = new Board{cells_horizontally, cells_vertically};
     _dijkstra = new Dijkstra(_board, _src, _dest);
+    _already_clicked = new bool*[cells_horizontally];
+    for (int i = 0; i < cells_horizontally; i++) _already_clicked[i] = new bool[cells_vertically];
 
     return true;
   }
@@ -55,6 +60,29 @@ class Program : public sge::Application {
           _started = true;
         }
       }
+    }
+    if (click_cooldown < 1.0f) click_cooldown += delta * 5.f;
+
+    if (Input::IsMouseButtonPressed(MouseButton::B1)) {
+      _mouse_button_released = false;
+      const auto mouse_position = Input::GetMousePos();
+      int x = mouse_position.x / Window::Instance()->GetWidth() * cells_horizontally;
+      int y = (Window::Instance()->GetHeight() - mouse_position.y) / (Window::Instance()->GetHeight() - TOP_BOUND) *
+              cells_vertically;
+      if (_board->InBounds(x, y) && !_already_clicked[x][y]) {
+        _already_clicked[x][y] = true;
+        if (_board->Free(x, y)) {
+          _board->SetWall(x, y);
+        } else {
+          _board->SetFree(x, y);
+        }
+      }
+    } else _mouse_button_released = true;
+
+    if (_mouse_button_released) {
+      _mouse_button_released = false;
+      for (int i = 0; i < cells_horizontally; i++) memset(_already_clicked[i], false, cells_vertically);
+
     }
 
     if (_keypress_timeout < 1.0f)
@@ -87,10 +115,7 @@ class Program : public sge::Application {
                                                    (margin * (y + 1) + field_size * y)}, {.7f, .7f, .0f});
         } else if (!_board->Free(x, y)) {
           DrawRectangle({field_size, field_size}, {(margin * (x + 1) + field_size * x),
-                                                   (margin * (y + 1) + field_size * y)}, {.0f, .0f, .0f},
-                        [=](float _1, float _2) {
-                          _board->SetFree(x, y);
-                        });
+                                                   (margin * (y + 1) + field_size * y)}, {.0f, .0f, .0f});
         } else if (_dijkstra->Visited(x, y)) {
           DrawRectangle({field_size, field_size}, {(margin * (x + 1) + field_size * x),
                                                    (margin * (y + 1) + field_size * y)}, {.6f, .4f, .9f});
@@ -108,14 +133,13 @@ class Program : public sge::Application {
                               this->_dest = {x, y};
                             }
                           }
-                          _board->SetWall(x, y);
                         });
         }
       }
     }
 
     if (timer < 1.0f)
-      timer += delta * 100;
+      timer += delta * 500;
     while (_started && timer > 1.0f) {
       timer -= 1.f;
       _dijkstra->Tick();
