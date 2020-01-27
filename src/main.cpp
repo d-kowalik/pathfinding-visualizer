@@ -27,7 +27,6 @@ class Program : public sge::Application {
   Dijkstra *_dijkstra;
   Point _src, _dest;
   float _keypress_timeout = 1.0f;
-  float click_cooldown = 1.0f;
   bool** _already_clicked;
   bool _mouse_button_released = false;
 
@@ -61,7 +60,6 @@ class Program : public sge::Application {
         }
       }
     }
-    if (click_cooldown < 1.0f) click_cooldown += delta * 5.f;
 
     if (Input::IsMouseButtonPressed(MouseButton::B1)) {
       _mouse_button_released = false;
@@ -91,13 +89,12 @@ class Program : public sge::Application {
     auto src = _dijkstra->GetSrc();
     auto dest = _dijkstra->GetDest();
 
-    DrawButton("Dijkstra", {0, 720 - TOP_BOUND}, {150, TOP_BOUND}, {.5f, .8f, .5f}, {.0f, .0f, .0f},
+    DrawButton("Dijkstra", {0, 720 - TOP_BOUND}, {150, TOP_BOUND}, {.5f, .8f, .5f}, {.0f, .0f, .0f}, .75f,
         [=](float, float) {
       delete _dijkstra;
       _dijkstra = new Dijkstra(_board, src, dest);
     });
-    DrawButton("A*", {150 + 10, 720 - TOP_BOUND}, {150, TOP_BOUND}, {.3f, .7f, .3f}, {.0f, .0f, .0f},
-        [=](float, float) {
+    DrawButton("A*", {150 + 10, 720 - TOP_BOUND}, {150, TOP_BOUND}, {.3f, .7f, .3f}, {.0f, .0f, .0f}, .75f, [=](float, float) {
       delete _dijkstra;
       _dijkstra = new AStar(_board,  src, dest);
     });
