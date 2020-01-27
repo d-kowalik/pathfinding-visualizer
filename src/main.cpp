@@ -18,8 +18,8 @@ class Program : public sge::Application {
   static constexpr float TOP_BOUND = 66.f;
 
   float field_size = 32.0f;
-  int cells_horizontally = 100, cells_vertically;
-  int margin = .0f;
+  int cells_horizontally = 66, cells_vertically;
+  float margin = 2.f;
   float timer = 0.f;
   bool found = false;
   bool _started = false;
@@ -49,6 +49,8 @@ class Program : public sge::Application {
 
   bool OnUpdate(float delta) override {
     if (Input::IsKeyPressed(Key::ESCAPE)) Window::Instance()->Close();
+    if (_keypress_timeout < 1.0f)
+      _keypress_timeout += delta * 10;
     if (Input::IsKeyPressed(Key::SPACE)) {
       if (_keypress_timeout >= 1.0f) {
         _keypress_timeout -= 1.0f;
@@ -83,54 +85,91 @@ class Program : public sge::Application {
 
     }
 
-    if (_keypress_timeout < 1.0f)
-      _keypress_timeout += delta * 10;
-
     auto src = _dijkstra->GetSrc();
     auto dest = _dijkstra->GetDest();
 
-    DrawButton("Dijkstra", {0, 720 - TOP_BOUND}, {150, TOP_BOUND}, {.5f, .8f, .5f}, {.0f, .0f, .0f}, .75f,
-        [=](float, float) {
+    Graphics::Rectangle source_rectangle{};
+    source_rectangle.scale = {field_size, field_size};
+    source_rectangle.color = {.9f, .0f, .6f};
+
+    Graphics::Rectangle destination_rectangle{};
+    destination_rectangle.scale = {field_size, field_size};
+    destination_rectangle.color = {.7f, .7f, .7f};
+
+    Graphics::Rectangle path_rectangle{};
+    path_rectangle.scale = {field_size, field_size};
+    path_rectangle.color = {.7f, .7f, .0f};
+
+    Graphics::Rectangle free_tile{};
+    free_tile.scale = {field_size, field_size};
+    free_tile.color = {.6f, .4f, .9f};
+
+    Graphics::Rectangle wall_tile{};
+    wall_tile.scale = {field_size, field_size};
+    wall_tile.color = {.0f, .0f, .0f};
+
+    Graphics::Rectangle visited_tile{};
+    visited_tile.scale = {field_size, field_size};
+    visited_tile.color = {.2f, .4f, .7f};
+
+    Graphics::Button dijkstra_button{};
+    dijkstra_button.text = "Dijkstra";
+    dijkstra_button.text_color = {.0f, .0f, .0f};
+    dijkstra_button.text_scale = 0.75f;
+    dijkstra_button.fill_color = {.5f, .8f, .5f};
+    dijkstra_button.position = {0, 720 - TOP_BOUND};
+    dijkstra_button.scale = {150, TOP_BOUND};
+
+    Graphics::Button astar_button{};
+    astar_button.text = "A*";
+    astar_button.text_color = {.0f, .0f, .0f};
+    astar_button.text_scale = 0.75f;
+    astar_button.fill_color = {.5f, .8f, .5f};
+    astar_button.position = {150+5, 720 - TOP_BOUND};
+    astar_button.scale = {150, TOP_BOUND};
+
+    DrawButton(dijkstra_button,[=](float, float) {
       delete _dijkstra;
       _dijkstra = new Dijkstra(_board, src, dest);
     });
-    DrawButton("A*", {150 + 10, 720 - TOP_BOUND}, {150, TOP_BOUND}, {.3f, .7f, .3f}, {.0f, .0f, .0f}, .75f, [=](float, float) {
+    DrawButton(astar_button, [=](float, float) {
       delete _dijkstra;
       _dijkstra = new AStar(_board,  src, dest);
     });
 
     for (int y = 0; y < cells_vertically; y++) {
       for (int x = 0; x < cells_horizontally; x++) {
+        const glm::vec2 position{(margin * (x + 1) + field_size * x), (margin * (y + 1) + field_size * y)};
         if (x == src.x && y == src.y) {
-          DrawRectangle({field_size, field_size}, {(margin * (x + 1) + field_size * x),
-                                                   (margin * (y + 1) + field_size * y)}, {.9f, .0f, .6f});
+          source_rectangle.position = position;
+          DrawRectangle(source_rectangle);
         } else if (x == dest.x && y == dest.y) {
-          DrawRectangle({field_size, field_size}, {(margin * (x + 1) + field_size * x),
-                                                   (margin * (y + 1) + field_size * y)}, {.9f, .4f, .6f});
+          destination_rectangle.position = position;
+          DrawRectangle(destination_rectangle);
         } else if (_dijkstra->OnFinalPath(x, y)) {
-          DrawRectangle({field_size, field_size}, {(margin * (x + 1) + field_size * x),
-                                                   (margin * (y + 1) + field_size * y)}, {.7f, .7f, .0f});
+          path_rectangle.position = position;
+          DrawRectangle(path_rectangle);
         } else if (!_board->Free(x, y)) {
-          DrawRectangle({field_size, field_size}, {(margin * (x + 1) + field_size * x),
-                                                   (margin * (y + 1) + field_size * y)}, {.0f, .0f, .0f});
+          wall_tile.position = position;
+          DrawRectangle(wall_tile);
         } else if (_dijkstra->Visited(x, y)) {
-          DrawRectangle({field_size, field_size}, {(margin * (x + 1) + field_size * x),
-                                                   (margin * (y + 1) + field_size * y)}, {.6f, .4f, .9f});
+          visited_tile.position = position;
+          DrawRectangle(visited_tile);
         } else {
-          DrawRectangle({field_size, field_size}, {(margin * (x + 1) + field_size * x),
-                                                   (margin * (y + 1) + field_size * y)}, {.0f, .8f, .3f},
-                        [=](float _1, float _2) {
-                          if (!_started) {
-                            if (Input::IsKeyPressed(Key::LEFT_CONTROL)) {
-                              _dijkstra->SetSource({x, y});
-                              this->_src = {x, y};
-                            }
-                            else if (Input::IsKeyPressed(Key::LEFT_SHIFT)) {
-                              _dijkstra->SetDestination({x, y});
-                              this->_dest = {x, y};
-                            }
-                          }
-                        });
+          free_tile.position = position;
+          DrawRectangle(free_tile);
+//                        [=](float _1, float _2) {
+//                          if (!_started) {
+//                            if (Input::IsKeyPressed(Key::LEFT_CONTROL)) {
+//                              _dijkstra->SetSource({x, y});
+//                              this->_src = {x, y};
+//                            }
+//                            else if (Input::IsKeyPressed(Key::LEFT_SHIFT)) {
+//                              _dijkstra->SetDestination({x, y});
+//                              this->_dest = {x, y};
+//                            }
+//                          }
+//                        });
         }
       }
     }
