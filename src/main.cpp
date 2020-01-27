@@ -100,10 +100,6 @@ class Program : public sge::Application {
     path_rectangle.scale = {field_size, field_size};
     path_rectangle.color = {.7f, .7f, .0f};
 
-    Graphics::Rectangle free_tile{};
-    free_tile.scale = {field_size, field_size};
-    free_tile.color = {.6f, .4f, .9f};
-
     Graphics::Rectangle wall_tile{};
     wall_tile.scale = {field_size, field_size};
     wall_tile.color = {.0f, .0f, .0f};
@@ -127,6 +123,10 @@ class Program : public sge::Application {
     astar_button.fill_color = {.5f, .8f, .5f};
     astar_button.position = {150+5, 720 - TOP_BOUND};
     astar_button.scale = {150, TOP_BOUND};
+
+    Graphics::Button free_tile{};
+    free_tile.scale = {field_size, field_size};
+    free_tile.fill_color = {.6f, .4f, .9f};
 
     DrawButton(dijkstra_button,[=](float, float) {
       delete _dijkstra;
@@ -157,19 +157,18 @@ class Program : public sge::Application {
           DrawRectangle(visited_tile);
         } else {
           free_tile.position = position;
-          DrawRectangle(free_tile);
-//                        [=](float _1, float _2) {
-//                          if (!_started) {
-//                            if (Input::IsKeyPressed(Key::LEFT_CONTROL)) {
-//                              _dijkstra->SetSource({x, y});
-//                              this->_src = {x, y};
-//                            }
-//                            else if (Input::IsKeyPressed(Key::LEFT_SHIFT)) {
-//                              _dijkstra->SetDestination({x, y});
-//                              this->_dest = {x, y};
-//                            }
-//                          }
-//                        });
+          DrawButton(free_tile,[=](float _1, float _2) {
+                          if (!_started) {
+                            if (Input::IsKeyPressed(Key::LEFT_CONTROL)) {
+                              _dijkstra->SetSource({x, y});
+                              this->_src = {x, y};
+                            }
+                            else if (Input::IsKeyPressed(Key::LEFT_SHIFT)) {
+                              _dijkstra->SetDestination({x, y});
+                              this->_dest = {x, y};
+                            }
+                          }
+                        });
         }
       }
     }
