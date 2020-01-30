@@ -33,7 +33,7 @@ class Program : public sge::Application {
   bool OnCreate() override {
     int w = Window::Instance()->GetWidth();
     int h = Window::Instance()->GetHeight() - TOP_BOUND;
-    field_size = (float)w / (float)(cells_horizontally + 2*margin);
+    field_size = (float)w / (float)(cells_horizontally) - margin;
     cells_vertically = h / (field_size + margin);
 
     _src = {3, 3};
