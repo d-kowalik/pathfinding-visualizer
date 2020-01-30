@@ -129,6 +129,14 @@ class Program : public sge::Application {
     astar_button.position = {150+5, 720 - TOP_BOUND};
     astar_button.scale = {150, TOP_BOUND};
 
+    Graphics::Button bfs_button{};
+    bfs_button.text = "BFS";
+    bfs_button.text_color = {.0f, .0f, .0f};
+    bfs_button.text_scale = 0.75f;
+    bfs_button.fill_color = {.5f, .8f, .5f};
+    bfs_button.position = {150+150+5+5, 720 - TOP_BOUND};
+    bfs_button.scale = {150, TOP_BOUND};
+
     Graphics::Button free_tile{};
     free_tile.scale = {field_size, field_size};
     free_tile.fill_color = {.6f, .4f, .9f};
@@ -140,6 +148,10 @@ class Program : public sge::Application {
     DrawButton(astar_button, [=](float, float) {
       delete _dijkstra;
       _dijkstra = new AStar(_board,  src, dest);
+    });
+    DrawButton(bfs_button,[=](float, float) {
+      delete _dijkstra;
+      _dijkstra = new Dijkstra(_board, src, dest);
     });
 
     for (int y = 0; y < cells_vertically; y++) {
