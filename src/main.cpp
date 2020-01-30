@@ -8,6 +8,7 @@
 #include "Board.hpp"
 #include "Dijkstra.hpp"
 #include "AStar.hpp"
+#include "DFS.hpp"
 
 using namespace sge;
 
@@ -137,6 +138,14 @@ class Program : public sge::Application {
     bfs_button.position = {150+150+5+5, 720 - TOP_BOUND};
     bfs_button.scale = {150, TOP_BOUND};
 
+    Graphics::Button dfs_button{};
+    dfs_button.text = "DFS";
+    dfs_button.text_color = {.0f, .0f, .0f};
+    dfs_button.text_scale = 0.75f;
+    dfs_button.fill_color = {.5f, .8f, .5f};
+    dfs_button.position = {150+150+150+5+5+5, 720 - TOP_BOUND};
+    dfs_button.scale = {150, TOP_BOUND};
+
     Graphics::Button free_tile{};
     free_tile.scale = {field_size, field_size};
     free_tile.fill_color = {.6f, .4f, .9f};
@@ -152,6 +161,10 @@ class Program : public sge::Application {
     DrawButton(bfs_button,[=](float, float) {
       delete _dijkstra;
       _dijkstra = new Dijkstra(_board, src, dest);
+    });
+    DrawButton(dfs_button,[=](float, float) {
+      delete _dijkstra;
+      _dijkstra = new DFS(_board, src, dest);
     });
 
     for (int y = 0; y < cells_vertically; y++) {

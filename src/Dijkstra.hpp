@@ -27,11 +27,11 @@ public:
   inline Point GetDest() { return _dest; }
 
   bool OnFinalPath(int x, int y) {
-    return std::find(_final_path.begin(), _final_path.end(), std::make_pair(x, y)) != _final_path.end();
+    return _found && std::find(_final_path.begin(), _final_path.end(), std::make_pair(x, y)) != _final_path.end();
   }
 
   bool Visited(int x, int y) const {
-    return _visited[x][y];
+    return _board->InBounds(x, y) && _visited[x][y];
   }
 
   void Reset(Board* board, Point src, Point dest);
@@ -82,7 +82,7 @@ public:
     putchar('\n');
   }
 
-  void Tick() {
+  virtual void Tick() {
     if (!_next_points.empty() && !_found) {
       Point current_point = *_next_points.begin();
       _next_points.erase(_next_points.begin());
