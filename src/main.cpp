@@ -47,6 +47,11 @@ class Program : public sge::Application {
     return true;
   }
 
+  void DrawField(Graphics::Rectangle& rectangle, glm::vec2 position) {
+    rectangle.position = position;
+    DrawRectangle(rectangle);
+  }
+
   bool OnUpdate(float delta) override {
     if (Input::IsKeyPressed(Key::ESCAPE)) Window::Instance()->Close();
     if (_keypress_timeout < 1.0f)
@@ -141,20 +146,15 @@ class Program : public sge::Application {
       for (int x = 0; x < cells_horizontally; x++) {
         const glm::vec2 position{(margin * (x + 1) + field_size * x), (margin * (y + 1) + field_size * y)};
         if (x == src.x && y == src.y) {
-          source_rectangle.position = position;
-          DrawRectangle(source_rectangle);
+          DrawField(source_rectangle, position);
         } else if (x == dest.x && y == dest.y) {
-          destination_rectangle.position = position;
-          DrawRectangle(destination_rectangle);
+          DrawField(destination_rectangle, position);
         } else if (_dijkstra->OnFinalPath(x, y)) {
-          path_rectangle.position = position;
-          DrawRectangle(path_rectangle);
+          DrawField(path_rectangle, position);
         } else if (!_board->Free(x, y)) {
-          wall_tile.position = position;
-          DrawRectangle(wall_tile);
+          DrawField(wall_tile, position);
         } else if (_dijkstra->Visited(x, y)) {
-          visited_tile.position = position;
-          DrawRectangle(visited_tile);
+          DrawField(visited_tile, position);
         } else {
           free_tile.position = position;
           DrawButton(free_tile,[=](float _1, float _2) {
