@@ -36,8 +36,8 @@ class Program : public sge::Application {
     field_size = (float)w / (float)(cells_horizontally) - margin;
     cells_vertically = h / (field_size + margin);
 
-    _src = {3, 3};
-    _dest = {30, 16};
+    _src = {std::max(0, 4), cells_vertically/2};
+    _dest = {std::max(1, cells_horizontally - 5), cells_vertically/2};
 
     _board = new Board{cells_horizontally, cells_vertically};
     _dijkstra = new Dijkstra(_board, _src, _dest);
