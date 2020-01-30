@@ -6,11 +6,11 @@ class DFS : public Dijkstra {
   std::stack<Point> _dfs_stack{};
 
 public:
-  DFS(Board* board, Point src, Point dest) : Dijkstra(board, src, dest) {
+  DFS(Board *board, Point src, Point dest) : Dijkstra(board, src, dest) {
     Reset(board, src, dest);
   }
 
-  void Reset(Board* board, Point src, Point dest) override {
+  void Reset(Board *board, Point src, Point dest) override {
     Dijkstra::Reset(board, src, dest);
     _dfs_stack.push(src);
     _visited[src.x][src.y] = true;
@@ -22,8 +22,7 @@ public:
       if (x == _dest.x && y == _dest.y) {
         printf("Found!");
         _found = true;
-      }
-      else if (_board->Free(x, y)) {
+      } else if (_board->Free(x, y)) {
         _dfs_stack.emplace(x, y);
         _final_path.emplace_back(x, y);
       }
@@ -36,15 +35,11 @@ public:
     if (!_dfs_stack.empty() && !_found) {
       Point p = _dfs_stack.top();
       int x = p.x, y = p.y;
-      if (Visited(x - 1, y) && Visited(x, y - 1) &&
-          Visited(x, y + 1) && Visited(x+1, y)) {
-        _dfs_stack.pop();
-      } else {
-        if (Check(x-1, y, p)) {}
-        else if (Check(x, y-1, p)) {}
-        else if (Check(x+1, y, p)) {}
-        else if (Check(x, y+1, p)) {}
-      }
+      if (Check(x - 1, y, p)) {}
+      else if (Check(x, y - 1, p)) {}
+      else if (Check(x + 1, y, p)) {}
+      else if (Check(x, y + 1, p)) {}
+      else _dfs_stack.pop();
     }
   }
 };
