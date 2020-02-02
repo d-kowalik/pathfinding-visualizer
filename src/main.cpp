@@ -3,7 +3,6 @@
 #include <Application.hpp>
 #include <Graphics/Window.hpp>
 #include <Input/Input.hpp>
-#include <Graphics/ToggleButton.hpp>
 
 #include "Point.hpp"
 #include "Board.hpp"
@@ -133,11 +132,19 @@ class Program : public sge::Application {
               cells_vertically;
       if (_board->InBounds(x, y) && !_already_clicked[x][y]) {
         _already_clicked[x][y] = true;
-        if (_board->Free(x, y)) {
-          _board->SetWall(x, y);
-        } else {
-          _board->SetFree(x, y);
-        }
+          if (!_started && Input::IsKeyPressed(Key::LEFT_CONTROL)) {
+            _dijkstra->SetSource({x, y});
+            _src = {x, y};
+          } else if (!_started && Input::IsKeyPressed(Key::LEFT_SHIFT)) {
+            _dijkstra->SetDestination({x, y});
+            _dest = {x, y};
+          } else {
+            if (_board->Free(x, y)) {
+              _board->SetWall(x, y);
+            } else {
+              _board->SetFree(x, y);
+            }
+          }
       }
     } else _mouse_button_released = true;
 
@@ -193,18 +200,6 @@ class Program : public sge::Application {
         } else if (_dijkstra->Visited(x, y)) {
           DrawField(visited_tile, position);
         } else {
-          //          free_tile->callback += [=](float, float) {
-//            if (!_started) {
-//              if (Input::IsKeyPressed(Key::LEFT_CONTROL)) {
-//                _dijkstra->SetSource({x, y});
-//                _src = {x, y};
-//              }
-//              else if (Input::IsKeyPressed(Key::LEFT_SHIFT)) {
-//                _dijkstra->SetDestination({x, y});
-//                _dest = {x, y};
-//              }
-//            }
-//          };
           DrawField(free_tile, position);
         }
       }
