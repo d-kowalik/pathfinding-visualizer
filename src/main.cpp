@@ -116,8 +116,8 @@ class Program : public sge::Application {
       if (_keypress_timeout >= 1.0f) {
         _keypress_timeout -= 1.0f;
         if (_started) {
-          _dijkstra->Reset();
           _started = false;
+          _dijkstra->Reset();
         } else {
           _started = true;
         }
@@ -151,7 +151,6 @@ class Program : public sge::Application {
     if (_mouse_button_released) {
       _mouse_button_released = false;
       for (int i = 0; i < cells_horizontally; i++) memset(_already_clicked[i], false, cells_vertically);
-
     }
 
     auto src = _dijkstra->GetSrc();
