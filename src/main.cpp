@@ -40,7 +40,7 @@ class Program : public sge::Application {
     int w = Window::Instance()->GetWidth();
     int h = Window::Instance()->GetHeight() - TOP_BOUND;
     field_size = (float)w / (float)(cells_horizontally) - margin;
-    cells_vertically = h / (field_size + margin);
+    cells_vertically = (float)h / (field_size + margin);
 
     _src = {std::max(0, 4), cells_vertically/2};
     _dest = {std::max(1, cells_horizontally - 5), cells_vertically/2};
@@ -130,9 +130,9 @@ class Program : public sge::Application {
     if (Input::IsMouseButtonPressed(MouseButton::B1)) {
       _mouse_button_released = false;
       const auto mouse_position = Input::GetMousePos();
-      int x = mouse_position.x / Window::Instance()->GetWidth() * cells_horizontally;
-      int y = (Window::Instance()->GetHeight() - mouse_position.y) / (Window::Instance()->GetHeight() - TOP_BOUND) *
-              cells_vertically;
+      printf("(%f, %f)\n", mouse_position.x, mouse_position.y);
+      int x = mouse_position.x / Window::Instance()->GetWidth() * cells_horizontally + margin/cells_horizontally;
+      int y = (Window::Instance()->GetHeight() - mouse_position.y) / (Window::Instance()->GetHeight() - TOP_BOUND) * cells_vertically;
       if (_board->InBounds(x, y) && !_already_clicked[x][y]) {
         _already_clicked[x][y] = true;
           if (!_started && Input::IsKeyPressed(Key::LEFT_CONTROL)) {
