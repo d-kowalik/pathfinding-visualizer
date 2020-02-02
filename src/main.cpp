@@ -123,6 +123,9 @@ class Program : public sge::Application {
         }
       }
     }
+    if (Input::IsKeyPressed(Key::R)) {
+      _board->Reset();
+    }
 
     if (Input::IsMouseButtonPressed(MouseButton::B1)) {
       _mouse_button_released = false;
