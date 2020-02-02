@@ -3,6 +3,7 @@
 #include <Application.hpp>
 #include <Graphics/Window.hpp>
 #include <Input/Input.hpp>
+#include <Graphics/ToggleButton.hpp>
 
 #include "Point.hpp"
 #include "Board.hpp"
@@ -30,6 +31,11 @@ class Program : public sge::Application {
   float _keypress_timeout = 1.0f;
   bool** _already_clicked;
   bool _mouse_button_released = false;
+  Graphics::Button bfs_button{};
+  Graphics::Button dijkstra_button{};
+  Graphics::Button astar_button{};
+  Graphics::Button dfs_button{};
+
 
   bool OnCreate() override {
     int w = Window::Instance()->GetWidth();
@@ -44,6 +50,56 @@ class Program : public sge::Application {
     _dijkstra = new Dijkstra(_board, _src, _dest);
     _already_clicked = new bool*[cells_horizontally];
     for (int i = 0; i < cells_horizontally; i++) _already_clicked[i] = new bool[cells_vertically];
+
+    dijkstra_button.text = "Dijkstra";
+    dijkstra_button.text_color = {.0f, .0f, .0f};
+    dijkstra_button.text_scale = 0.75f;
+    dijkstra_button.fill_color = {.5f, .8f, .5f};
+    dijkstra_button.position = {0, 720 - TOP_BOUND};
+    dijkstra_button.scale = {150, TOP_BOUND};
+    dijkstra_button.is_toggle_button = true;
+    dijkstra_button.toggled = true;
+    dijkstra_button.callback += [=](float, float) {
+      delete _dijkstra;
+      _dijkstra = new Dijkstra(_board, _src, _dest);
+    };
+
+    astar_button.text = "A*";
+    astar_button.text_color = {.0f, .0f, .0f};
+    astar_button.text_scale = 0.75f;
+    astar_button.fill_color = {.5f, .8f, .5f};
+    astar_button.position = {150+5, 720 - TOP_BOUND};
+    astar_button.scale = {150, TOP_BOUND};
+    astar_button.is_toggle_button = true;
+    astar_button.callback += [=](float, float) {
+      delete _dijkstra;
+      _dijkstra = new AStar(_board,  _src, _dest);
+    };
+
+    bfs_button.text = "BFS";
+    bfs_button.text_color = {.0f, .0f, .0f};
+    bfs_button.text_scale = 0.75f;
+    bfs_button.fill_color = {.5f, .8f, .5f};
+    bfs_button.position = {150+150+5+5, 720 - TOP_BOUND};
+    bfs_button.scale = {150, TOP_BOUND};
+    bfs_button.is_toggle_button = true;
+    bfs_button.callback += [=](float, float) {
+      delete _dijkstra;
+      _dijkstra = new Dijkstra(_board,  _src, _dest);
+    };
+
+    dfs_button.text = "DFS";
+    dfs_button.text_color = {.0f, .0f, .0f};
+    dfs_button.text_scale = 0.75f;
+    dfs_button.fill_color = {.5f, .8f, .5f};
+    dfs_button.position = {150+150+150+5+5+5, 720 - TOP_BOUND};
+    dfs_button.scale = {150, TOP_BOUND};
+    dfs_button.is_toggle_button = true;
+    dfs_button.callback += [=](float, float) {
+      delete _dijkstra;
+      _dijkstra = new DFS(_board, _src, _dest);
+    };
+
 
     return true;
   }
@@ -114,58 +170,14 @@ class Program : public sge::Application {
     visited_tile.scale = {field_size, field_size};
     visited_tile.color = {.2f, .4f, .7f};
 
-    Graphics::Button dijkstra_button{};
-    dijkstra_button.text = "Dijkstra";
-    dijkstra_button.text_color = {.0f, .0f, .0f};
-    dijkstra_button.text_scale = 0.75f;
-    dijkstra_button.fill_color = {.5f, .8f, .5f};
-    dijkstra_button.position = {0, 720 - TOP_BOUND};
-    dijkstra_button.scale = {150, TOP_BOUND};
-
-    Graphics::Button astar_button{};
-    astar_button.text = "A*";
-    astar_button.text_color = {.0f, .0f, .0f};
-    astar_button.text_scale = 0.75f;
-    astar_button.fill_color = {.5f, .8f, .5f};
-    astar_button.position = {150+5, 720 - TOP_BOUND};
-    astar_button.scale = {150, TOP_BOUND};
-
-    Graphics::Button bfs_button{};
-    bfs_button.text = "BFS";
-    bfs_button.text_color = {.0f, .0f, .0f};
-    bfs_button.text_scale = 0.75f;
-    bfs_button.fill_color = {.5f, .8f, .5f};
-    bfs_button.position = {150+150+5+5, 720 - TOP_BOUND};
-    bfs_button.scale = {150, TOP_BOUND};
-
-    Graphics::Button dfs_button{};
-    dfs_button.text = "DFS";
-    dfs_button.text_color = {.0f, .0f, .0f};
-    dfs_button.text_scale = 0.75f;
-    dfs_button.fill_color = {.5f, .8f, .5f};
-    dfs_button.position = {150+150+150+5+5+5, 720 - TOP_BOUND};
-    dfs_button.scale = {150, TOP_BOUND};
-
-    Graphics::Button free_tile{};
+    Graphics::Rectangle free_tile{};
     free_tile.scale = {field_size, field_size};
-    free_tile.fill_color = {.6f, .4f, .9f};
+    free_tile.color = {.6f, .4f, .9f};
 
-    DrawButton(dijkstra_button,[=](float, float) {
-      delete _dijkstra;
-      _dijkstra = new Dijkstra(_board, src, dest);
-    });
-    DrawButton(astar_button, [=](float, float) {
-      delete _dijkstra;
-      _dijkstra = new AStar(_board,  src, dest);
-    });
-    DrawButton(bfs_button,[=](float, float) {
-      delete _dijkstra;
-      _dijkstra = new Dijkstra(_board, src, dest);
-    });
-    DrawButton(dfs_button,[=](float, float) {
-      delete _dijkstra;
-      _dijkstra = new DFS(_board, src, dest);
-    });
+    DrawButton(dijkstra_button);
+    DrawButton(astar_button);
+    DrawButton(bfs_button);
+    DrawButton(dfs_button);
 
     for (int y = 0; y < cells_vertically; y++) {
       for (int x = 0; x < cells_horizontally; x++) {
@@ -181,19 +193,19 @@ class Program : public sge::Application {
         } else if (_dijkstra->Visited(x, y)) {
           DrawField(visited_tile, position);
         } else {
-          free_tile.position = position;
-          DrawButton(free_tile,[=](float _1, float _2) {
-                          if (!_started) {
-                            if (Input::IsKeyPressed(Key::LEFT_CONTROL)) {
-                              _dijkstra->SetSource({x, y});
-                              this->_src = {x, y};
-                            }
-                            else if (Input::IsKeyPressed(Key::LEFT_SHIFT)) {
-                              _dijkstra->SetDestination({x, y});
-                              this->_dest = {x, y};
-                            }
-                          }
-                        });
+          //          free_tile->callback += [=](float, float) {
+//            if (!_started) {
+//              if (Input::IsKeyPressed(Key::LEFT_CONTROL)) {
+//                _dijkstra->SetSource({x, y});
+//                _src = {x, y};
+//              }
+//              else if (Input::IsKeyPressed(Key::LEFT_SHIFT)) {
+//                _dijkstra->SetDestination({x, y});
+//                _dest = {x, y};
+//              }
+//            }
+//          };
+          DrawField(free_tile, position);
         }
       }
     }

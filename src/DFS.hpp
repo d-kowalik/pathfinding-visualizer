@@ -17,7 +17,7 @@ public:
   }
 
   bool Check(int x, int y, Point current_point, bool diag = false) override {
-    if (_board->InBounds(x, y) && !_visited[x][y]) {
+    if (_board->InBounds(x, y) && !_visited[x][y] && _board->Free(x, y)) {
       _visited[x][y] = true;
       if (x == _dest.x && y == _dest.y) {
         printf("Found!");
