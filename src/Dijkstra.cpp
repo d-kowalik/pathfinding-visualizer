@@ -18,7 +18,6 @@ void Dijkstra::Reset(Board* board, Point src, Point dest) {
 }
 
 void Dijkstra::Reset(Point src, Point dest) {
-  _board->Reset();
   Reset(_board, src, dest);
 }
 
