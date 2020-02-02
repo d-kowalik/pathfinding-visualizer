@@ -54,8 +54,8 @@ class Program : public sge::Application {
     dijkstra_button.text_color = {.0f, .0f, .0f};
     dijkstra_button.text_scale = 0.75f;
     dijkstra_button.fill_color = {.5f, .8f, .5f};
-    dijkstra_button.position = {0, 720 - TOP_BOUND};
-    dijkstra_button.scale = {150, TOP_BOUND};
+    dijkstra_button.position = {0+5, 720 - TOP_BOUND};
+    dijkstra_button.scale = {150, TOP_BOUND-5};
     dijkstra_button.is_toggle_button = true;
     dijkstra_button.toggled = true;
     dijkstra_button.callback += [=](float, float) {
@@ -67,8 +67,8 @@ class Program : public sge::Application {
     astar_button.text_color = {.0f, .0f, .0f};
     astar_button.text_scale = 0.75f;
     astar_button.fill_color = {.5f, .8f, .5f};
-    astar_button.position = {150+5, 720 - TOP_BOUND};
-    astar_button.scale = {150, TOP_BOUND};
+    astar_button.position = {150+5+5, 720 - TOP_BOUND};
+    astar_button.scale = {150, TOP_BOUND-5};
     astar_button.is_toggle_button = true;
     astar_button.callback += [=](float, float) {
       delete _dijkstra;
@@ -79,8 +79,8 @@ class Program : public sge::Application {
     bfs_button.text_color = {.0f, .0f, .0f};
     bfs_button.text_scale = 0.75f;
     bfs_button.fill_color = {.5f, .8f, .5f};
-    bfs_button.position = {150+150+5+5, 720 - TOP_BOUND};
-    bfs_button.scale = {150, TOP_BOUND};
+    bfs_button.position = {150+150+5+5+5, 720 - TOP_BOUND};
+    bfs_button.scale = {150, TOP_BOUND-5};
     bfs_button.is_toggle_button = true;
     bfs_button.callback += [=](float, float) {
       delete _dijkstra;
@@ -91,8 +91,8 @@ class Program : public sge::Application {
     dfs_button.text_color = {.0f, .0f, .0f};
     dfs_button.text_scale = 0.75f;
     dfs_button.fill_color = {.5f, .8f, .5f};
-    dfs_button.position = {150+150+150+5+5+5, 720 - TOP_BOUND};
-    dfs_button.scale = {150, TOP_BOUND};
+    dfs_button.position = {150+150+150+5+5+5+5, 720 - TOP_BOUND};
+    dfs_button.scale = {150, TOP_BOUND-5};
     dfs_button.is_toggle_button = true;
     dfs_button.callback += [=](float, float) {
       delete _dijkstra;
