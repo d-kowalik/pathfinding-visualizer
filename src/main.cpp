@@ -58,6 +58,7 @@ class Program : public sge::Application {
     dijkstra_button.scale = {150, TOP_BOUND-5};
     dijkstra_button.is_toggle_button = true;
     dijkstra_button.toggled = true;
+    dijkstra_button.toggled_color = {.15f, .3f, .6f};
     dijkstra_button.callback += [=](float, float) {
       delete _dijkstra;
       _dijkstra = new Dijkstra(_board, _src, _dest);
@@ -70,6 +71,7 @@ class Program : public sge::Application {
     astar_button.position = {150+5+5, 720 - TOP_BOUND};
     astar_button.scale = {150, TOP_BOUND-5};
     astar_button.is_toggle_button = true;
+    astar_button.toggled_color = {.15f, .3f, .6f};
     astar_button.callback += [=](float, float) {
       delete _dijkstra;
       _dijkstra = new AStar(_board,  _src, _dest);
@@ -82,6 +84,7 @@ class Program : public sge::Application {
     bfs_button.position = {150+150+5+5+5, 720 - TOP_BOUND};
     bfs_button.scale = {150, TOP_BOUND-5};
     bfs_button.is_toggle_button = true;
+    bfs_button.toggled_color = {.15f, .3f, .6f};
     bfs_button.callback += [=](float, float) {
       delete _dijkstra;
       _dijkstra = new Dijkstra(_board,  _src, _dest);
@@ -94,6 +97,7 @@ class Program : public sge::Application {
     dfs_button.position = {150+150+150+5+5+5+5, 720 - TOP_BOUND};
     dfs_button.scale = {150, TOP_BOUND-5};
     dfs_button.is_toggle_button = true;
+    dfs_button.toggled_color ={.15f, .3f, .6f};
     dfs_button.callback += [=](float, float) {
       delete _dijkstra;
       _dijkstra = new DFS(_board, _src, _dest);
