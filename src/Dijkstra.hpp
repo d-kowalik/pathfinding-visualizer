@@ -61,11 +61,15 @@ public:
         return true;
       }
       if (_board->Free(x, y)) {
-        _next_points.emplace(x, y, current_point.distance + (diag ? 2 : 1));
+        _next_points.emplace(x, y, CalculateDistance(x, y, current_point, diag));
         _previous_points[x][y] = std::make_pair(current_point.x, current_point.y);
       }
     }
     return false;
+  }
+
+  virtual float CalculateDistance(int x, int y, Point current_point, bool diag = false) {
+    return current_point.distance + (diag ? sqrt(2.0) : 1);
   }
 
   void CalculatePath() {

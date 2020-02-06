@@ -9,6 +9,7 @@
 #include "Dijkstra.hpp"
 #include "AStar.hpp"
 #include "DFS.hpp"
+#include "AStar2.hpp"
 
 using namespace sge;
 
@@ -33,6 +34,7 @@ class Program : public sge::Application {
   Graphics::Button bfs_button{};
   Graphics::Button dijkstra_button{};
   Graphics::Button astar_button{};
+  Graphics::Button astar2_button{};
   Graphics::Button dfs_button{};
 
 
@@ -64,7 +66,7 @@ class Program : public sge::Application {
       _dijkstra = new Dijkstra(_board, _src, _dest);
     };
 
-    astar_button.text = "A*";
+    astar_button.text = "A* 1";
     astar_button.text_color = {.0f, .0f, .0f};
     astar_button.text_scale = 0.75f;
     astar_button.fill_color = {.5f, .8f, .5f};
@@ -77,11 +79,24 @@ class Program : public sge::Application {
       _dijkstra = new AStar(_board,  _src, _dest);
     };
 
+    astar2_button.text = "A* 2";
+    astar2_button.text_color = {.0f, .0f, .0f};
+    astar2_button.text_scale = 0.75f;
+    astar2_button.fill_color = {.5f, .8f, .5f};
+    astar2_button.position = {150+150+5+5+5, 720 - TOP_BOUND};
+    astar2_button.scale = {150, TOP_BOUND-5};
+    astar2_button.is_toggle_button = true;
+    astar2_button.toggled_color = {.15f, .3f, .6f};
+    astar2_button.callback += [=](float, float) {
+      delete _dijkstra;
+      _dijkstra = new AStar2(_board,  _src, _dest);
+    };
+
     bfs_button.text = "BFS";
     bfs_button.text_color = {.0f, .0f, .0f};
     bfs_button.text_scale = 0.75f;
     bfs_button.fill_color = {.5f, .8f, .5f};
-    bfs_button.position = {150+150+5+5+5, 720 - TOP_BOUND};
+    bfs_button.position = {150+150+150+5+5+5+5, 720 - TOP_BOUND};
     bfs_button.scale = {150, TOP_BOUND-5};
     bfs_button.is_toggle_button = true;
     bfs_button.toggled_color = {.15f, .3f, .6f};
@@ -94,7 +109,7 @@ class Program : public sge::Application {
     dfs_button.text_color = {.0f, .0f, .0f};
     dfs_button.text_scale = 0.75f;
     dfs_button.fill_color = {.5f, .8f, .5f};
-    dfs_button.position = {150+150+150+5+5+5+5, 720 - TOP_BOUND};
+    dfs_button.position = {150+150+150+150+5+5+5+5+5, 720 - TOP_BOUND};
     dfs_button.scale = {150, TOP_BOUND-5};
     dfs_button.is_toggle_button = true;
     dfs_button.toggled_color ={.15f, .3f, .6f};
@@ -188,6 +203,7 @@ class Program : public sge::Application {
 
     DrawButton(dijkstra_button);
     DrawButton(astar_button);
+    DrawButton(astar2_button);
     DrawButton(bfs_button);
     DrawButton(dfs_button);
 
