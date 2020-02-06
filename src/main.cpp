@@ -28,7 +28,6 @@ class Program : public sge::Application {
   Board *_board;
   Dijkstra *_dijkstra;
   Point _src, _dest;
-  float _keypress_timeout = 1.0f;
   bool** _already_clicked;
   bool _mouse_button_released = false;
   Graphics::Button bfs_button{};
