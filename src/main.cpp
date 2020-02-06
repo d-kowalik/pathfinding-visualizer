@@ -36,6 +36,28 @@ class Program : public sge::Application {
   Graphics::Button astar2_button{};
   Graphics::Button dfs_button{};
 
+  void DestroyField() {
+    delete _board;
+    delete _dijkstra;
+    delete[] _already_clicked;
+  }
+
+  void InitializeField() {
+    int w = Window::Instance()->GetWidth();
+    int h = Window::Instance()->GetHeight() - TOP_BOUND;
+    field_size = (float)w / (float)(cells_horizontally) - margin;
+    cells_vertically = (float)h / (field_size + margin);
+
+    _src = {std::max(0, 4), cells_vertically/2};
+    _dest = {std::max(1, cells_horizontally - 5), cells_vertically/2};
+
+    _board = new Board{cells_horizontally, cells_vertically};
+    _dijkstra = new Dijkstra(_board, _src, _dest);
+
+    _already_clicked = new bool*[cells_horizontally];
+    for (int i = 0; i < cells_horizontally; i++) _already_clicked[i] = new bool[cells_vertically];
+  }
+
 
   bool OnCreate() override {
     int w = Window::Instance()->GetWidth();
@@ -138,6 +160,16 @@ class Program : public sge::Application {
       } else {
         _started = true;
       }
+    } else if (!_started && key == Key::KP_ADD) {
+      DestroyField();
+      margin -= 0.01f;
+      cells_horizontally += 2;
+      InitializeField();
+    } else if (!_started && key == Key::KP_SUBTRACT && cells_horizontally > 5) {
+      DestroyField();
+      margin += 0.01f;
+      cells_horizontally -= 2;
+      InitializeField();
     }
   }
 
