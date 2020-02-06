@@ -18,8 +18,8 @@ class Program : public sge::Application {
 
   static constexpr float TOP_BOUND = 66.f;
 
-  float field_size = 32.0f;
-  int cells_horizontally = 66, cells_vertically;
+  float field_size = 20.0f;
+  int cells_horizontally = 88, cells_vertically;
   float margin = 2.f;
   float timer = 0.f;
   bool found = false;
@@ -112,24 +112,23 @@ class Program : public sge::Application {
     DrawRectangle(rectangle);
   }
 
-  bool OnUpdate(float delta) override {
-    if (Input::IsKeyPressed(Key::ESCAPE)) Window::Instance()->Close();
-    if (_keypress_timeout < 1.0f)
-      _keypress_timeout += delta * 10;
-    if (Input::IsKeyPressed(Key::SPACE)) {
-      if (_keypress_timeout >= 1.0f) {
-        _keypress_timeout -= 1.0f;
-        if (_started) {
-          _started = false;
-          _dijkstra->Reset();
-        } else {
-          _started = true;
-        }
+  void OnKeyPressed(Key key) override {
+    if (key == Key::P) {
+      _started = !_started;
+    } else if (key == Key::R) {
+      _board->Reset();
+    } else if (key == Key::SPACE) {
+      if (_started) {
+        _started = false;
+        _dijkstra->Reset();
+      } else {
+        _started = true;
       }
     }
-    if (Input::IsKeyPressed(Key::R)) {
-      _board->Reset();
-    }
+  }
+
+  bool OnUpdate(float delta) override {
+    if (Input::IsKeyPressed(Key::ESCAPE)) Window::Instance()->Close();
 
     if (Input::IsMouseButtonPressed(MouseButton::B1)) {
       _mouse_button_released = false;
