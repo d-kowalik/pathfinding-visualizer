@@ -36,6 +36,10 @@ class Program : public sge::Application {
   Graphics::Button astar2_button{};
   Graphics::Button dfs_button{};
 
+  ~Program() override {
+    DestroyField();
+  }
+
   void DestroyField() {
     delete _board;
     delete _dijkstra;
