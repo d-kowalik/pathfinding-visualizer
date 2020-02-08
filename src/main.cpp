@@ -28,13 +28,15 @@ class Program : public sge::Application {
   Board *_board;
   Dijkstra *_dijkstra;
   Point _src, _dest;
-  bool** _already_clicked;
-  bool _mouse_button_released = false;
   Graphics::Button bfs_button{};
   Graphics::Button dijkstra_button{};
   Graphics::Button astar_button{};
   Graphics::Button astar2_button{};
   Graphics::Button dfs_button{};
+  bool _input_mode = true;
+
+  static constexpr char const* INPUT_MODE_TEXT = "DRAW";
+  static constexpr char const* ERASE_MODE_TEXT = "ERASE";
 
 public:
   ~Program() override {
@@ -44,7 +46,6 @@ public:
   void DestroyField() {
     delete _board;
     delete _dijkstra;
-    delete[] _already_clicked;
   }
 
   void InitializeField() {
@@ -58,9 +59,6 @@ public:
 
     _board = new Board{cells_horizontally, cells_vertically};
     _dijkstra = new Dijkstra(_board, _src, _dest);
-
-    _already_clicked = new bool*[cells_horizontally];
-    for (int i = 0; i < cells_horizontally; i++) _already_clicked[i] = new bool[cells_vertically];
   }
 
 
@@ -75,8 +73,6 @@ public:
 
     _board = new Board{cells_horizontally, cells_vertically};
     _dijkstra = new Dijkstra(_board, _src, _dest);
-    _already_clicked = new bool*[cells_horizontally];
-    for (int i = 0; i < cells_horizontally; i++) _already_clicked[i] = new bool[cells_vertically];
 
     dijkstra_button.text = "Dijkstra";
     dijkstra_button.text_color = {.0f, .0f, .0f};
@@ -175,6 +171,10 @@ public:
       margin += 0.01f;
       cells_horizontally -= 2;
       InitializeField();
+    } else if (key == Key::D) {
+      _input_mode = true;
+    } else if (key == Key::E) {
+      _input_mode = false;
     }
   }
 
@@ -182,13 +182,11 @@ public:
     if (Input::IsKeyPressed(Key::ESCAPE)) Window::Instance()->Close();
 
     if (Input::IsMouseButtonPressed(MouseButton::B1)) {
-      _mouse_button_released = false;
       const auto mouse_position = Input::GetMousePos();
       printf("(%f, %f)\n", mouse_position.x, mouse_position.y);
       int x = mouse_position.x / Window::Instance()->GetWidth() * cells_horizontally + margin/cells_horizontally;
       int y = (Window::Instance()->GetHeight() - mouse_position.y) / (Window::Instance()->GetHeight() - TOP_BOUND - 4*margin) * cells_vertically;
-      if (_board->InBounds(x, y) && !_already_clicked[x][y]) {
-        _already_clicked[x][y] = true;
+      if (_board->InBounds(x, y)) {
           if (!_started && Input::IsKeyPressed(Key::LEFT_CONTROL)) {
             _dijkstra->SetSource({x, y});
             _src = {x, y};
@@ -196,18 +194,13 @@ public:
             _dijkstra->SetDestination({x, y});
             _dest = {x, y};
           } else {
-            if (_board->Free(x, y)) {
+            if (_input_mode && _board->Free(x, y)) {
               _board->SetWall(x, y);
-            } else {
+            } else if (!_input_mode) {
               _board->SetFree(x, y);
             }
           }
       }
-    } else _mouse_button_released = true;
-
-    if (_mouse_button_released) {
-      _mouse_button_released = false;
-      for (int i = 0; i < cells_horizontally; i++) memset(_already_clicked[i], false, cells_vertically);
     }
 
     auto src = _dijkstra->GetSrc();
@@ -242,6 +235,18 @@ public:
     DrawButton(astar2_button);
     DrawButton(bfs_button);
     DrawButton(dfs_button);
+
+    Graphics::Text input_mode_text{};
+    if (_input_mode) {
+      input_mode_text.text = INPUT_MODE_TEXT;
+      input_mode_text.color = {1.f, 1.f, 1.f};
+    } else {
+      input_mode_text.text = ERASE_MODE_TEXT;
+      input_mode_text.color = {1.f, .25f, .25f};
+    }
+    input_mode_text.position = {Window::Instance()->GetWidth() - 190.f, Window::Instance()->GetHeight() - TOP_BOUND + 7.5f};
+    input_mode_text.scale = 1.f;
+    DrawText(input_mode_text);
 
     for (int y = 0; y < cells_vertically; y++) {
       for (int x = 0; x < cells_horizontally; x++) {
