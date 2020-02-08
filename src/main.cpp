@@ -36,6 +36,7 @@ class Program : public sge::Application {
   Graphics::Button astar2_button{};
   Graphics::Button dfs_button{};
 
+public:
   ~Program() override {
     DestroyField();
   }
@@ -185,7 +186,7 @@ class Program : public sge::Application {
       const auto mouse_position = Input::GetMousePos();
       printf("(%f, %f)\n", mouse_position.x, mouse_position.y);
       int x = mouse_position.x / Window::Instance()->GetWidth() * cells_horizontally + margin/cells_horizontally;
-      int y = (Window::Instance()->GetHeight() - mouse_position.y) / (Window::Instance()->GetHeight() - TOP_BOUND) * cells_vertically;
+      int y = (Window::Instance()->GetHeight() - mouse_position.y) / (Window::Instance()->GetHeight() - TOP_BOUND - 4*margin) * cells_vertically;
       if (_board->InBounds(x, y) && !_already_clicked[x][y]) {
         _already_clicked[x][y] = true;
           if (!_started && Input::IsKeyPressed(Key::LEFT_CONTROL)) {
