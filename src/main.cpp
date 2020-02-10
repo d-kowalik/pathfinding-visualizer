@@ -59,6 +59,11 @@ public:
 
     _board = new Board{cells_horizontally, cells_vertically};
     _dijkstra = new Dijkstra(_board, _src, _dest);
+    dijkstra_button.toggled = true;
+    bfs_button.toggled = false;
+    astar_button.toggled = false;
+    astar2_button.toggled = false;
+    dfs_button.toggled = false;
   }
 
 
