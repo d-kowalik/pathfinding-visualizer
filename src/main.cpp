@@ -178,7 +178,7 @@ public:
       margin -= 0.01f;
       cells_horizontally += 2;
       InitializeField();
-    } else if (!_started && key == Key::KP_SUBTRACT && cells_horizontally > 5) {
+    } else if (!_started && key == Key::KP_SUBTRACT && cells_horizontally > 5 && cells_vertically > 5) {
       DestroyField();
       margin += 0.01f;
       cells_horizontally -= 2;
