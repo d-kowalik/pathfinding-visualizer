@@ -256,7 +256,7 @@ public:
       input_mode_text.text = ERASE_MODE_TEXT;
       input_mode_text.color = {1.f, .25f, .25f};
     }
-    input_mode_text.position = {Window::Instance()->GetWidth() - 190.f, Window::Instance()->GetHeight() - TOP_BOUND + 7.5f};
+    input_mode_text.position = {Window::Instance()->GetWidth() - 166.f, Window::Instance()->GetHeight() - TOP_BOUND + 7.5f};
     input_mode_text.scale = 1.f;
     DrawText(input_mode_text);
 
