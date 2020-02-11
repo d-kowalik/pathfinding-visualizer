@@ -75,27 +75,18 @@ public:
     astar2_button.position.y = h;
     dfs_button.position.y = h;
     bfs_button.position.y = h;
-
   }
 
 
   bool OnCreate() override {
-    int w = Window::Instance()->GetWidth();
+    InitializeField();
     int h = Window::Instance()->GetHeight() - TOP_BOUND;
-    field_size = (float)w / (float)(cells_horizontally) - margin;
-    cells_vertically = (float)h / (field_size + margin);
-
-    _src = {std::max(0, 4), cells_vertically/2};
-    _dest = {std::max(1, cells_horizontally - 5), cells_vertically/2};
-
-    _board = new Board{cells_horizontally, cells_vertically};
-    _dijkstra = new Dijkstra(_board, _src, _dest);
 
     dijkstra_button.text = "Dijkstra";
     dijkstra_button.text_color = {.0f, .0f, .0f};
     dijkstra_button.text_scale = 0.75f;
     dijkstra_button.fill_color = {.5f, .8f, .5f};
-    dijkstra_button.position = {0+5, 720 - TOP_BOUND};
+    dijkstra_button.position = {0+5, h};
     dijkstra_button.scale = {150, TOP_BOUND-5};
     dijkstra_button.is_toggle_button = true;
     dijkstra_button.toggled = true;
@@ -109,7 +100,7 @@ public:
     astar_button.text_color = {.0f, .0f, .0f};
     astar_button.text_scale = 0.75f;
     astar_button.fill_color = {.5f, .8f, .5f};
-    astar_button.position = {150+5+5, 720 - TOP_BOUND};
+    astar_button.position = {150+5+5, h};
     astar_button.scale = {150, TOP_BOUND-5};
     astar_button.is_toggle_button = true;
     astar_button.toggled_color = {.15f, .3f, .6f};
@@ -122,7 +113,7 @@ public:
     astar2_button.text_color = {.0f, .0f, .0f};
     astar2_button.text_scale = 0.75f;
     astar2_button.fill_color = {.5f, .8f, .5f};
-    astar2_button.position = {150+150+5+5+5, 720 - TOP_BOUND};
+    astar2_button.position = {150+150+5+5+5, h};
     astar2_button.scale = {150, TOP_BOUND-5};
     astar2_button.is_toggle_button = true;
     astar2_button.toggled_color = {.15f, .3f, .6f};
@@ -135,7 +126,7 @@ public:
     bfs_button.text_color = {.0f, .0f, .0f};
     bfs_button.text_scale = 0.75f;
     bfs_button.fill_color = {.5f, .8f, .5f};
-    bfs_button.position = {150+150+150+5+5+5+5, 720 - TOP_BOUND};
+    bfs_button.position = {150+150+150+5+5+5+5, h};
     bfs_button.scale = {150, TOP_BOUND-5};
     bfs_button.is_toggle_button = true;
     bfs_button.toggled_color = {.15f, .3f, .6f};
@@ -148,7 +139,7 @@ public:
     dfs_button.text_color = {.0f, .0f, .0f};
     dfs_button.text_scale = 0.75f;
     dfs_button.fill_color = {.5f, .8f, .5f};
-    dfs_button.position = {150+150+150+150+5+5+5+5+5, 720 - TOP_BOUND};
+    dfs_button.position = {150+150+150+150+5+5+5+5+5, h};
     dfs_button.scale = {150, TOP_BOUND-5};
     dfs_button.is_toggle_button = true;
     dfs_button.toggled_color ={.15f, .3f, .6f};
