@@ -50,7 +50,12 @@ public:
 
   void InitializeField() {
     int w = Window::Instance()->GetWidth();
-    int h = Window::Instance()->GetHeight() - TOP_BOUND;
+    int h = Window::Instance()->GetHeight();
+    InitializeField(w, h);
+  }
+
+  void InitializeField(int w, int h) {
+    h -= TOP_BOUND;
     field_size = (float)w / (float)(cells_horizontally) - margin;
     cells_vertically = (float)h / (field_size + margin);
 
@@ -64,6 +69,13 @@ public:
     astar_button.toggled = false;
     astar2_button.toggled = false;
     dfs_button.toggled = false;
+
+    dijkstra_button.position.y = h;
+    astar_button.position.y = h;
+    astar2_button.position.y = h;
+    dfs_button.position.y = h;
+    bfs_button.position.y = h;
+
   }
 
 
@@ -145,8 +157,12 @@ public:
       _dijkstra = new DFS(_board, _src, _dest);
     };
 
-
     return true;
+  }
+
+  void OnResize(int w, int h) override {
+    DestroyField();
+    InitializeField(w, h);
   }
 
   void DrawField(Graphics::Rectangle& rectangle, glm::vec2 position) {
