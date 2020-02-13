@@ -48,7 +48,6 @@ set(LIBS ${SGE} glfw GL GLAD ${FREETYPE}    dl)
 include_directories(
         "${CMAKE_SOURCE_DIR}/src"
         "${CMAKE_SOURCE_DIR}/include"
-        "/home/damian/Projects/simple-gui-engine/src"
 )
 
 # Define the link libraries
