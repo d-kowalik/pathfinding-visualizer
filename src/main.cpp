@@ -33,6 +33,14 @@ class Program : public sge::Application {
   Graphics::Button astar_button{};
   Graphics::Button astar2_button{};
   Graphics::Button dfs_button{};
+  Graphics::Rectangle source_rectangle{};
+  Graphics::Rectangle destination_rectangle{};
+  Graphics::Rectangle path_rectangle{};
+  Graphics::Rectangle wall_tile{};
+  Graphics::Rectangle visited_tile{};
+  Graphics::Rectangle free_tile{};
+  Graphics::Text input_mode_text{};
+
   bool _input_mode = true;
 
   static constexpr char const* INPUT_MODE_TEXT = "DRAW";
@@ -148,6 +156,28 @@ public:
       _dijkstra = new DFS(_board, _src, _dest);
     };
 
+
+    source_rectangle.scale = {field_size, field_size};
+    source_rectangle.color = {.9f, .0f, .6f};
+
+    destination_rectangle.scale = {field_size, field_size};
+    destination_rectangle.color = {.7f, .7f, .7f};
+
+    path_rectangle.scale = {field_size, field_size};
+    path_rectangle.color = {.7f, .7f, .0f};
+
+    wall_tile.scale = {field_size, field_size};
+    wall_tile.color = {.0f, .0f, .0f};
+
+    visited_tile.scale = {field_size, field_size};
+    visited_tile.color = {.2f, .4f, .7f};
+
+    free_tile.scale = {field_size, field_size};
+    free_tile.color = {.6f, .4f, .9f};
+
+    input_mode_text.position = {Window::Instance()->GetWidth() - 166.f, Window::Instance()->GetHeight() - TOP_BOUND + 7.5f};
+    input_mode_text.scale = 1.f;
+
     return true;
   }
 
@@ -187,12 +217,12 @@ public:
       _input_mode = true;
     } else if (key == Key::E) {
       _input_mode = false;
+    } else if (key == Key::ESCAPE) {
+      Window::Instance()->Close();
     }
   }
 
   bool OnUpdate(float delta) override {
-    if (Input::IsKeyPressed(Key::ESCAPE)) Window::Instance()->Close();
-
     if (Input::IsMouseButtonPressed(MouseButton::B1)) {
       const auto mouse_position = Input::GetMousePos();
       printf("(%f, %f)\n", mouse_position.x, mouse_position.y);
@@ -218,37 +248,12 @@ public:
     auto src = _dijkstra->GetSrc();
     auto dest = _dijkstra->GetDest();
 
-    Graphics::Rectangle source_rectangle{};
-    source_rectangle.scale = {field_size, field_size};
-    source_rectangle.color = {.9f, .0f, .6f};
-
-    Graphics::Rectangle destination_rectangle{};
-    destination_rectangle.scale = {field_size, field_size};
-    destination_rectangle.color = {.7f, .7f, .7f};
-
-    Graphics::Rectangle path_rectangle{};
-    path_rectangle.scale = {field_size, field_size};
-    path_rectangle.color = {.7f, .7f, .0f};
-
-    Graphics::Rectangle wall_tile{};
-    wall_tile.scale = {field_size, field_size};
-    wall_tile.color = {.0f, .0f, .0f};
-
-    Graphics::Rectangle visited_tile{};
-    visited_tile.scale = {field_size, field_size};
-    visited_tile.color = {.2f, .4f, .7f};
-
-    Graphics::Rectangle free_tile{};
-    free_tile.scale = {field_size, field_size};
-    free_tile.color = {.6f, .4f, .9f};
-
     DrawButton(dijkstra_button);
     DrawButton(astar_button);
     DrawButton(astar2_button);
     DrawButton(bfs_button);
     DrawButton(dfs_button);
 
-    Graphics::Text input_mode_text{};
     if (_input_mode) {
       input_mode_text.text = INPUT_MODE_TEXT;
       input_mode_text.color = {1.f, 1.f, 1.f};
@@ -256,8 +261,7 @@ public:
       input_mode_text.text = ERASE_MODE_TEXT;
       input_mode_text.color = {1.f, .25f, .25f};
     }
-    input_mode_text.position = {Window::Instance()->GetWidth() - 166.f, Window::Instance()->GetHeight() - TOP_BOUND + 7.5f};
-    input_mode_text.scale = 1.f;
+
     DrawText(input_mode_text);
 
     for (int y = 0; y < cells_vertically; y++) {

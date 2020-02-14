@@ -25,7 +25,7 @@ void Dijkstra::Reset() {
   Reset(_src, _dest);
 }
 
-bool Dijkstra::Check(int x, int y, Point current_point, bool diag = false) {
+bool Dijkstra::Check(int x, int y, Point current_point, bool diag) {
   if (_board->InBounds(x, y) && !_visited[x][y]) {
     _visited[x][y] = true;
     if (x == _dest.x && y == _dest.y) {
