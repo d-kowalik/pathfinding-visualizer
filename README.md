@@ -23,6 +23,7 @@
 ### Keybindings
 - D - enter drawing mode
 - E - enter erase mode
+- P - pause
 - \+ - increase board size
 - \'-' - decrease board size
 - R - reset all drawn walls
