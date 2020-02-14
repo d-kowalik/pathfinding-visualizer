@@ -83,6 +83,27 @@ public:
     astar2_button.position.y = h;
     dfs_button.position.y = h;
     bfs_button.position.y = h;
+
+    source_rectangle.scale = {field_size, field_size};
+    source_rectangle.color = {.9f, .0f, .6f};
+
+    destination_rectangle.scale = {field_size, field_size};
+    destination_rectangle.color = {.7f, .7f, .7f};
+
+    path_rectangle.scale = {field_size, field_size};
+    path_rectangle.color = {.7f, .7f, .0f};
+
+    wall_tile.scale = {field_size, field_size};
+    wall_tile.color = {.0f, .0f, .0f};
+
+    visited_tile.scale = {field_size, field_size};
+    visited_tile.color = {.2f, .4f, .7f};
+
+    free_tile.scale = {field_size, field_size};
+    free_tile.color = {.6f, .4f, .9f};
+
+    input_mode_text.position = {Window::Instance()->GetWidth() - 166.f, Window::Instance()->GetHeight() - TOP_BOUND + 7.5f};
+    input_mode_text.scale = 1.f;
   }
 
 
@@ -155,28 +176,6 @@ public:
       delete _dijkstra;
       _dijkstra = new DFS(_board, _src, _dest);
     };
-
-
-    source_rectangle.scale = {field_size, field_size};
-    source_rectangle.color = {.9f, .0f, .6f};
-
-    destination_rectangle.scale = {field_size, field_size};
-    destination_rectangle.color = {.7f, .7f, .7f};
-
-    path_rectangle.scale = {field_size, field_size};
-    path_rectangle.color = {.7f, .7f, .0f};
-
-    wall_tile.scale = {field_size, field_size};
-    wall_tile.color = {.0f, .0f, .0f};
-
-    visited_tile.scale = {field_size, field_size};
-    visited_tile.color = {.2f, .4f, .7f};
-
-    free_tile.scale = {field_size, field_size};
-    free_tile.color = {.6f, .4f, .9f};
-
-    input_mode_text.position = {Window::Instance()->GetWidth() - 166.f, Window::Instance()->GetHeight() - TOP_BOUND + 7.5f};
-    input_mode_text.scale = 1.f;
 
     return true;
   }
