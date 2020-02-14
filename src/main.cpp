@@ -20,7 +20,7 @@ class Program : public sge::Application {
   static constexpr float TOP_BOUND = 66.f;
 
   float field_size = 20.0f;
-  int cells_horizontally = 66, cells_vertically;
+  int cells_horizontally = 88, cells_vertically;
   float margin = 2.f;
   float timer = 0.f;
   bool found = false;
