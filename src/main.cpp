@@ -24,7 +24,7 @@ class Program : public sge::Application {
   float margin = 2.f;
   float timer = 0.f;
   bool found = false;
-  bool _started = false;
+  bool _started = false, _paused = false;
   Board *_board;
   Dijkstra *_dijkstra;
   Point _src, _dest;
@@ -193,14 +193,16 @@ public:
 
   void OnKeyPressed(Key key) override {
     if (key == Key::P) {
-      _started = !_started;
+      _paused = !_paused;
     } else if (key == Key::R) {
       _board->Reset();
     } else if (key == Key::SPACE) {
       if (_started) {
+        _paused = false;
         _started = false;
         _dijkstra->Reset();
       } else {
+        _paused = false;
         _started = true;
       }
     } else if (!_started && key == Key::KP_ADD) {
@@ -285,7 +287,7 @@ public:
 
     if (timer < 1.0f)
       timer += delta * 500;
-    while (_started && timer > 1.0f) {
+    while (_started && !_paused && timer > 1.0f) {
       timer -= 1.f;
       _dijkstra->Tick();
     }
